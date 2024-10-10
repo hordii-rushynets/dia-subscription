@@ -1,0 +1,44 @@
+version: '3'
+services:
+  db:
+    image: postgres:12
+    environment:
+      - POSTGRES_DB={POSTGRES_DB}
+      - POSTGRES_USER={POSTGRES_USER}
+      - POSTGRES_PASSWORD={POSTGRES_PASSWORD}
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    expose:
+      - 5432
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+      - ./docker/postgresql/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  web:
+    image: hordiirushynets/dia-subscription:latest
+    build: .
+    command:
+      bash -c "
+      sleep 1
+      && python manage.py makemigrations
+      && python manage.py migrate
+      && python manage.py collectstatic --noinput
+      && python manage.py runserver 0.0.0.0:8000"
+      # && gunicorn --bind 0.0.0.0:8000 dia_subscription.wsgi:application"
+    volumes:
+      - .:/app
+      - ./static:/var/static
+      - ./media:/var/media
+    ports:
+      - "8000:8000"
+      - "5678:5678"
+    depends_on:
+      - db
+    env_file:
+      - .env
+
+volumes:
+  postgres_data:
