@@ -6,4 +6,5 @@ from rest_framework.views import APIView
 
 class SuccessView(APIView):
     def post(self, request: Request, *args, **kwargs) -> Response:
+        print(request.data)
         return Response({"success": True}, status=status.HTTP_200_OK)
