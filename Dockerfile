@@ -7,6 +7,10 @@ WORKDIR /app
 
 COPY requirements.txt /app/
 
+COPY modules/Linux/64/ /usr/lib/
+
+ENV LD_LIBRARY_PATH=/usr/lib
+
 RUN apt-get update; \
     apt-get install -y gettext;
 

@@ -16,7 +16,7 @@ class DIASubscriptionService:
             self.eu_sign.initialize(self.CAS, self.CA_CERTIFICATES)
         except Exception as e:
             print ("Initialize crypto library failed. " + str(e))
-            exit()
+            return
         
         hash = self.get_hash(request_id)
 
