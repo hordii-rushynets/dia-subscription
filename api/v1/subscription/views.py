@@ -14,7 +14,7 @@ class SuccessView(APIView):
 
         data = json.loads(decoded_data)
         print("Data:", data, "\n\n")
-        data = request.data
+        # data = request.data
 
         signature = data.get('signature')
         request_id = data.get('requestId')
