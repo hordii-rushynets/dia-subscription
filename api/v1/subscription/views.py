@@ -2,9 +2,17 @@ from rest_framework import status
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
+import base64
+import json
 
 
 class SuccessView(APIView):
     def post(self, request: Request, *args, **kwargs) -> Response:
-        print(request.data)
+        print("Encoded request data:", request.data , "\n\n")
+        encoded_data = request.data.get('encoded_data')
+
+        decoded_data = base64.b64decode(encoded_data).decode('utf-8')
+        data = json.loads(decoded_data)
+
+        print("Decoded request data:", data)
         return Response({"success": True}, status=status.HTTP_200_OK)
