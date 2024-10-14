@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
+import sys
 from pathlib import Path
 import dj_database_url
 
@@ -20,13 +21,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
+sys.path.append(f'{BASE_DIR}/modules/Linux/64')
+
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-3i$z+d39vs5%=s$)v8$2t-vseen(vhmxl&7o-gko^un(8er$1j'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['dockerized-dia-subscription-3b3eecafb592.herokuapp.com']
+ALLOWED_HOSTS = ['dockerized-dia-subscription-3b3eecafb592.herokuapp.com', 'localhost']
 
 
 # Application definition
@@ -40,7 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
 
-    'api.v1.subscription.apps.SubscriptionConfig'
+    'api.v1.subscription.apps.SubscriptionConfig',
+    'apps.dia_subscription_users.apps.DiaSubscriptionUsersConfig'
 ]
 
 MIDDLEWARE = [
@@ -127,6 +131,11 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
+DIA_CERTIFICATES_ROOT = os.path.join(BASE_DIR, "certificates")
+
+CAS_FILE_NAME = 'CAs.Test.All.json' if DEBUG else 'CAs.json'
+CA_CERTIFICATES_FILE_NAME = 'CACertificates.Test.All.p7b' if DEBUG else 'CACertificates.p7b'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

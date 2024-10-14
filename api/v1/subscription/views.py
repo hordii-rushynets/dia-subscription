@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 import base64
 import json
+from apps.dia_subscription_users import services
 
 
 class SuccessView(APIView):
@@ -15,7 +16,12 @@ class SuccessView(APIView):
         print("Data:", data, "\n\n")
 
         signature = data.get('signature')
-        decoded_signature = base64.b64decode(signature).decode('utf-8')
-        print("Decoded signature:", json.loads(decoded_signature), "\n")
+        request_id = data.get('request_id')
+        service = services.DIASubscriptionService()
+        hash = service.get_hash(request_id)
+        print("Hash:", hash, "\n")
+        
+        result = service.get_user_data(signature, request_id)
+        print("Result:", result, "\n")
 
         return Response({"success": True}, status=status.HTTP_200_OK)
