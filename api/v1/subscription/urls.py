@@ -3,5 +3,5 @@ from .views import SuccessView
 
 
 urlpatterns = [
-    path('success/', SuccessView.as_view(), name='success'),
+    path('success', SuccessView.as_view(), name='success'),
 ]
