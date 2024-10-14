@@ -12,7 +12,8 @@ class SuccessView(APIView):
         encoded_data = request.data.get('encoded_data')
 
         decoded_data = base64.b64decode(encoded_data).decode('utf-8')
-        data = json.loads(decoded_data)
+        print("Decoded request data:", decoded_data, "\n\n")
 
-        print("Decoded request data:", data)
+        data = json.loads(decoded_data)
+        print("Data:", data, "\n\n")
         return Response({"success": True}, status=status.HTTP_200_OK)
