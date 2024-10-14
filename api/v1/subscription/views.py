@@ -14,10 +14,10 @@ class SuccessView(APIView):
 
         data = json.loads(decoded_data)
         print("Data:", data, "\n\n")
-        # data = request.data
+        data = request.data
 
         signature = data.get('signature')
-        request_id = data.get('request_id')
+        request_id = data.get('requestId')
         service = services.DIASubscriptionService()
         
         result = service.get_user_data(signature, request_id)
