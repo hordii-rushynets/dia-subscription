@@ -9,7 +9,7 @@ import json
 class SuccessView(APIView):
     def post(self, request: Request, *args, **kwargs) -> Response:
         print("Encoded request data:", request.data , "\n\n")
-        encoded_data = request.data.get('encoded_data')
+        encoded_data = request.data.get('encodeData')
 
         decoded_data = base64.b64decode(encoded_data).decode('utf-8')
         print("Decoded request data:", decoded_data, "\n\n")
