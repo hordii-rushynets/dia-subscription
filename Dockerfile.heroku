@@ -13,10 +13,10 @@ RUN pip install gunicorn dj-database-url psycopg2-binary whitenoise
 # Copy project files
 COPY app/ .
 
-COPY app/modules/Linux/64/ /usr/lib/EUSignCP
+COPY app/modules/Linux/64/ /usr/lib
 
 # Set environment variables for Heroku
-ENV LD_LIBRARY_PATH=/usr/lib/EUSignCP
+ENV LD_LIBRARY_PATH=/usr/lib
 ENV PORT 8000
 
 # Run the server with gunicorn
