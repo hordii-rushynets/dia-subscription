@@ -24,7 +24,8 @@ class DIASubscriptionService:
         sign_file_path = f"{os.getcwd()}.ext.cades-x-long.p7s"
 
         new_signature = self.eu_sign.cades_make_container(signature, None, self.eu_sign.SIGN_TYPE_CADES_X_LONG)
-        results = self.eu_sign.cades_verify_data(request_id, new_signature)
+        # results = self.eu_sign.cades_verify_data(request_id, new_signature)
+        results = self.eu_sign.cades_verify_data_internal(new_signature)
         self.eu_sign.print_verify_results(data_file_path, sign_file_path, results)
 
     def get_hash(self, request_id: str) -> str:
