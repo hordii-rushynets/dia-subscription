@@ -13,7 +13,7 @@ RUN pip install gunicorn dj-database-url psycopg2-binary whitenoise
 # Copy project files
 COPY app/ .
 
-COPY modules/Linux/64/ /usr/lib/
+COPY app/modules/Linux/64/ /usr/lib/
 
 # Set environment variables for Heroku
 ENV LD_LIBRARY_PATH=/usr/lib
