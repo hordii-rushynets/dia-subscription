@@ -13,7 +13,7 @@ class SuccessView(APIView):
         decoded_data = base64.b64decode(encoded_data).decode('utf-8')
 
         data = json.loads(decoded_data)
-        # print("Data:", data, "\n\n")
+        print("Data:", data, "\n\n")
         # data = request.data
 
         signature = data.get('signature')
