@@ -70,6 +70,9 @@ class DIASubscriptionService:
     def make_offer_request(self, token: str, branch_id: str, offer_id: str) -> str:
         request_uuid = str(uuid.uuid4())
         request_id = self.get_hash(request_uuid)
+
+        print("Request UUID:", request_uuid, '\n')
+        print("Request ID:", request_id, '\n')
         
         response = requests.post(f'{settings.DIA_BASE_URL}/api/v2/acquirers/branch/{branch_id}/offer-request/dynamic', data=json.dumps({
             "offerId": f"{offer_id}",
