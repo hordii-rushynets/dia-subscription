@@ -309,7 +309,7 @@ class EUSign():
 			return signs_infos
 		except Exception as e:
 			d_error = eval(str(e))
-			raise Exception("An error occurred while verify CAdES-detached. Error code: " + str(d_error['ErrorCode']) + ". Description: " + str(d_error['ErrorDesc']).decode())
+			raise Exception("An error occurred while verify CAdES-detached. Error code: " + str(d_error['ErrorCode']) + ". Description: " + d_error['ErrorDesc'].decode())
 
 	def cades_verify_data_internal(self, signature):
 		""" Метод перевірки внутрішнього підпису (CAdES-enveloped)"""
