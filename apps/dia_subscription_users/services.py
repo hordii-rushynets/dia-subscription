@@ -88,7 +88,7 @@ class DIASubscriptionService:
         if not response.status_code == 200:
             raise ValidationError('Failed to make offer request.')
         
-        cache.set(request_id, request_uuid, timeout=60*4)
+        cache.set(request_id.decode('utf-8'), request_uuid, timeout=60*4)
         return response.json().get('deeplink')
 
     def get_user_data(self, signature: str, request_id: str):
