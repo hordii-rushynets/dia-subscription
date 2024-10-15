@@ -96,10 +96,13 @@ class DIASubscriptionService:
         sign_file_path = f"{os.getcwd()}.ext.cades-x-long.p7s"
 
         print(f'Signature: {signature} \n')
-        print(f'RequestId: {request_id} \n\n')
+        print(f'RequestId from request: {request_id} \n\n')
 
         request_uuid = cache.get(request_id)
         print('request uuid', request_uuid, '\n')
+
+        hash = self.get_hash(request_uuid)
+        print(f"RequestID from hash: {hash} \n\n")
 
         new_signature = self.eu_sign.cades_make_container(signature, None, self.eu_sign.SIGN_TYPE_CADES_X_LONG)
         # results = self.eu_sign.cades_verify_data('a123456b-1015-3552-1234-123412341234', new_signature)
