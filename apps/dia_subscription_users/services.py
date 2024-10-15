@@ -72,12 +72,12 @@ class DIASubscriptionService:
         request_id = self.get_hash(request_uuid)
 
         print("Request UUID:", request_uuid, '\n')
-        print("Request ID:", request_id, '---', request_id.decode('utf-8'), '\n')
+        print("Request ID:", str(request_id), '\n')
         
         response = requests.post(f'{settings.DIA_BASE_URL}/api/v2/acquirers/branch/{branch_id}/offer-request/dynamic', data=json.dumps({
             "offerId": f"{offer_id}",
             "returnLink": "https://dia-subscription.test-internet-technology-hub.online/api/v1/success",
-            "requestId": request_id.decode('utf-8'),
+            "requestId": str(request_id),
             "signAlgo": "DSTU",
             "scopes": {"diiaId": ["auth"]}
         }), headers={
