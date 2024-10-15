@@ -10,6 +10,7 @@ from apps.dia_subscription_users import services
 class SuccessView(APIView):
     def post(self, request: Request, *args, **kwargs) -> Response:
         encoded_data = request.data.get('encodeData')
+        print(f'Encoded data: {encoded_data} \n')
         decoded_data = base64.b64decode(encoded_data).decode('utf-8')
 
         data = json.loads(decoded_data)
