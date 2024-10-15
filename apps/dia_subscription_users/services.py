@@ -89,14 +89,11 @@ class DIASubscriptionService:
         return response.json().get('deeplink')
 
     def get_user_data(self, signature: str, request_id: str):
-        hash = self.get_hash('a123456b-1015-3552-1234-123412341234')
-
         data_file_path = f"{os.getcwd()}.ext.cades-x-long"
         sign_file_path = f"{os.getcwd()}.ext.cades-x-long.p7s"
 
         print(f'Signature: {signature} \n')
-        print(f'RequestId: {request_id} \n')
-        print(f"Hash: {hash} \n")
+        print(f'RequestId: {request_id} \n\n')
 
         request_uuid = cache.get(request_id)
 
