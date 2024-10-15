@@ -1,6 +1,7 @@
 """Service to validate subscription."""
 import os
 import uuid
+import dill
 import json
 import requests
 from .eusign import EUSign
@@ -15,8 +16,8 @@ class DIASubscriptionService:
     CA_CERTIFICATES = f'{settings.DIA_CERTIFICATES_ROOT}/{settings.CA_CERTIFICATES_FILE_NAME}'
 
     def __init__(self):
-        
         self.eu_sign = EUSign()
+
         try:
             self.eu_sign.initialize(self.CAS, self.CA_CERTIFICATES)
         except Exception as e:
@@ -68,11 +69,11 @@ class DIASubscriptionService:
         return response.json().get('_id')
 
     def make_offer_request(self, token: str, branch_id: str, offer_id: str) -> str:
-        request_uuid = str(uuid.uuid4())
-        request_id = self.get_hash(request_uuid)
+        request_uuid: uuid.UUID = uuid.uuid4()
+        request_id: bytes = self.get_hash(request_uuid.bytes)
 
         print("Request UUID:", request_uuid, '\n')
-        print("Request ID:", str(request_id), '---', request_id.decode('utf-8'), '\n')
+        print("Request ID:", request_id.decode('utf-8'), '\n')
         
         response = requests.post(f'{settings.DIA_BASE_URL}/api/v2/acquirers/branch/{branch_id}/offer-request/dynamic', data=json.dumps({
             "offerId": f"{offer_id}",
@@ -98,20 +99,14 @@ class DIASubscriptionService:
         print(f'Signature: {signature} \n')
         print(f'RequestId from request: {request_id} \n\n')
 
-        request_uuid = cache.get(request_id)
+        request_uuid: uuid.UUID = cache.get(request_id)
         print('request uuid', request_uuid, '\n')
 
-        hash = self.get_hash(request_uuid)
-        print(f"RequestID from hash: {hash} \n\n")
-
         new_signature = self.eu_sign.cades_make_container(signature, None, self.eu_sign.SIGN_TYPE_CADES_X_LONG)
-        # results = self.eu_sign.cades_verify_data('a123456b-1015-3552-1234-123412341234', new_signature)
-        results = self.eu_sign.cades_verify_data(request_uuid, new_signature)
+        results = self.eu_sign.cades_verify_data(request_uuid.bytes, new_signature)
         self.eu_sign.print_verify_results(data_file_path, sign_file_path, results)
 
-        print(results)
-
-    def get_hash(self, request_uuid: str) -> str:
+    def get_hash(self, request_uuid: bytes) -> bytes:
         try:
             return self.eu_sign.hash_data(request_uuid)
         except Exception as e:
