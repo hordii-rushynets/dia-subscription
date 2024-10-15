@@ -99,6 +99,7 @@ class DIASubscriptionService:
         print(f'RequestId: {request_id} \n\n')
 
         request_uuid = cache.get(request_id)
+        print('request uuid', request_uuid, '\n')
 
         new_signature = self.eu_sign.cades_make_container(signature, None, self.eu_sign.SIGN_TYPE_CADES_X_LONG)
         # results = self.eu_sign.cades_verify_data('a123456b-1015-3552-1234-123412341234', new_signature)
