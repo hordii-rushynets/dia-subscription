@@ -1,0 +1,31 @@
+from typing import OrderedDict
+
+from rest_framework import exceptions, serializers
+
+from apps.dia_subscription_users import models
+
+
+class CompanySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Company
+        fields = ['id']
+
+
+class SignerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Signer
+        fields = ['id', 'first_name', 'last_name', 'middle_name', 'vote']
+    
+    def validate(self, attrs: OrderedDict) -> OrderedDict:
+        first_name = attrs.get('first_name')
+        last_name = attrs.get('last_name')
+        middle_name = attrs.get('middle_name')
+
+        if not all([first_name, last_name, middle_name]):
+            raise exceptions.ValidationError(f'Missing user data: First name: {first_name}, Last name: {last_name}, Middle name: {middle_name}')
+
+        if models.Signer.objects.filter(first_name=first_name, last_name=last_name,
+                                         middle_name=middle_name, vote__isnull=False).exists():
+            raise exceptions.ValidationError('Vote already exists.')
+        
+        return attrs

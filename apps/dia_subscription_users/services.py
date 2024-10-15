@@ -67,17 +67,14 @@ class DIASubscriptionService:
 
         return response.json().get('_id')
 
-    def make_offer_request(self, token: str, branch_id: str, offer_id: str) -> str:
+    def make_offer_request(self, token: str, branch_id: str, offer_id: str, company_id: int) -> str:
         request_uuid: uuid.UUID = uuid.uuid4()
-        request_id: bytes = self.get_hash(request_uuid.bytes)
-
-        print("Request UUID:", request_uuid, '\n')
-        print("Request ID:", request_id.decode('utf-8'), '\n')
+        request_id: bytes = self.get_hash(request_uuid.bytes).decode('utf-8')
         
         response = requests.post(f'{settings.DIA_BASE_URL}/api/v2/acquirers/branch/{branch_id}/offer-request/dynamic', data=json.dumps({
             "offerId": f"{offer_id}",
             "returnLink": "https://dia-subscription.test-internet-technology-hub.online/api/v1/success",
-            "requestId": request_id.decode('utf-8'),
+            "requestId": request_id,
             "signAlgo": "DSTU",
             "scopes": {"diiaId": ["auth"]}
         }), headers={
@@ -88,10 +85,11 @@ class DIASubscriptionService:
         if not response.status_code == 200:
             raise ValidationError('Failed to make offer request.')
         
-        cache.set(request_id.decode('utf-8'), request_uuid, timeout=60*4)
+        cache.set(f'{request_id}_company_id', company_id, timeout=60*4)
+        cache.set(request_id, request_uuid, timeout=60*4)
         return response.json().get('deeplink')
 
-    def get_user_data(self, signature: str, request_id: str):
+    def get_user_data(self, signature: str, request_id: str) -> dict:
         data_file_path = f"{os.getcwd()}.ext.cades-x-long"
         sign_file_path = f"{os.getcwd()}.ext.cades-x-long.p7s"
 
@@ -104,6 +102,14 @@ class DIASubscriptionService:
         new_signature = self.eu_sign.cades_make_container(signature, None, self.eu_sign.SIGN_TYPE_CADES_X_LONG)
         results = self.eu_sign.cades_verify_data(request_uuid.bytes, new_signature)
         self.eu_sign.print_verify_results(data_file_path, sign_file_path, results)
+        signer = results[0]["infoEx"]["pszSubjCN"].split(' ')
+
+        return {
+            'first_name': signer[0],
+            'last_name': signer[1],
+            'middle_name': signer[2],
+            'vote': int(cache.get(f'{request_id}_company_id'))
+        }
 
     def get_hash(self, request_uuid: bytes) -> bytes:
         try:
