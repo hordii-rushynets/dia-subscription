@@ -1,7 +1,6 @@
 """Service to validate subscription."""
 import os
 import uuid
-import dill
 import json
 import requests
 from .eusign import EUSign
