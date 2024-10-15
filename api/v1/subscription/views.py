@@ -7,14 +7,22 @@ import json
 from apps.dia_subscription_users import services
 
 
+class DeeplinkView(APIView):
+    def get(self, request: Request, *args, **kwargs) -> Response:
+        service = services.DIASubscriptionService()
+        acquirer_token = service.get_acquirer_token()
+        branch_id = service.create_branch(acquirer_token)
+        branch_offer_id = service.create_branch_offer(acquirer_token, branch_id)
+        deeplink = service.make_offer_request(acquirer_token, branch_id, branch_offer_id)
+        return Response({"deeplink": deeplink}, status=status.HTTP_200_OK)
+
+
 class SuccessView(APIView):
     def post(self, request: Request, *args, **kwargs) -> Response:
         encoded_data = request.data.get('encodeData')
-        print(f'Encoded data: {encoded_data} \n')
         decoded_data = base64.b64decode(encoded_data).decode('utf-8')
 
         data = json.loads(decoded_data)
-        print("Data:", data, "\n\n")
         # data = request.data
 
         signature = data.get('signature')

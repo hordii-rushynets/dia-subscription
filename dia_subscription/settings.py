@@ -94,6 +94,20 @@ DATABASES = {
 
 # DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
 
+REDIS_PASSWORD = os.getenv('REDIS_PASSWORD')
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": f"redis://:{REDIS_PASSWORD}@redis:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "PASSWORD": REDIS_PASSWORD,  # Set Redis password here
+        }
+    }
+}
+
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -125,15 +139,15 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
-
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
-DIA_CERTIFICATES_ROOT = os.path.join(BASE_DIR, "certificates")
+DIA_BASE_URL = os.getenv('DIA_BASE_URL')
+DIA_AUTH_ACQUIRER_TOKEN=os.getenv('DIA_AUTH_ACQUIRER_TOKEN')
+DIA_ACQUIRER_TOKEN=os.getenv('DIA_ACQUIRER_TOKEN')
 
+DIA_CERTIFICATES_ROOT = os.path.join(BASE_DIR, "certificates")
 CAS_FILE_NAME = 'CAs.Test.All.json' if DEBUG else 'CAs.json'
 CA_CERTIFICATES_FILE_NAME = 'CACertificates.Test.All.p7b' if DEBUG else 'CACertificates.p7b'
 
