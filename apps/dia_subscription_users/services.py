@@ -34,12 +34,14 @@ class DIASubscriptionService:
 
     def create_branch(self, token: str) -> str:
         response = requests.post(f'{settings.DIA_BASE_URL}api/v2/acquirers/branch', data=json.dumps({
-            "name": "user-1",
+            "name": "УП медіа плюс",
             "email": "v.vitalii.pustovoit@pravda.ua",
+            "region": "Kиївська обл.",
+            "location": "м. Київ",
             "deliveryTypes": ["api"],
             "offerRequestType": "dynamic",
-            "street": "вул. Київська",
-            "house": "2г",
+            "street": "вул. Жилянська",
+            "house": "48/50а",
             "scopes": {"diiaId": ["auth"]}
         }), headers={
             'Authorization': f'Bearer {token}',
