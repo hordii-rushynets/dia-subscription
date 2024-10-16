@@ -46,6 +46,7 @@ class SuccessView(APIView):
         service = services.DIASubscriptionService()
 
         result = service.get_user_data(signature, request_id)
+        print("result:", result)
 
         serializer = serializers.SignerSerializer(data=result)
         serializer.is_valid(raise_exception=True)
