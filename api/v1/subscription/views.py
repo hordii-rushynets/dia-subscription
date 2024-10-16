@@ -21,6 +21,9 @@ class DeeplinkView(APIView):
         vote_business_id = request.data.get('vote_business')
         vote_business_veterans_id = request.data.get('vote_business_veterans')
 
+        if not vote_business_id or not vote_business_veterans_id:
+            raise ValidationError('vote_business_id  and vote_business_veterans_id is required.')
+
         service = services.DIASubscriptionService()
         acquirer_token = service.get_acquirer_token()
         branch_id = service.create_branch(acquirer_token)
