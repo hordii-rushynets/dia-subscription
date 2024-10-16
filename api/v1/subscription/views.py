@@ -58,8 +58,8 @@ class SuccessView(APIView):
 
 
 class ValidateSignStatusView(APIView):
-    def post(self, request: Request, *args, **kwargs) -> Response:
-        request_id = request.data.get('requestId')
+    def get(self, request: Request, *args, **kwargs) -> Response:
+        request_id = request.query_params.get('requestId')
         request_id_status = cache.get(f'{request_id}_status')
 
         if not request_id_status:
