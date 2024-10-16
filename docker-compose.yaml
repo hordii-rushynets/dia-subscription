@@ -37,9 +37,8 @@ services:
       sleep 1
       && python manage.py makemigrations
       && python manage.py migrate
-      && python manage.py collectstatic --noinput
-      && python manage.py runserver 0.0.0.0:8000"
-      # && gunicorn --bind 0.0.0.0:8000 dia_subscription.wsgi:application"
+      && gunicorn --bind 0.0.0.0:8000 dia_subscription.wsgi:application"
+    restart: always
     volumes:
       - .:/app
       - ./static:/var/static
