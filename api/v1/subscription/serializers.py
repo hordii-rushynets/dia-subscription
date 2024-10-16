@@ -1,3 +1,4 @@
+from functools import cache
 from typing import OrderedDict
 
 from rest_framework import exceptions, serializers
@@ -22,11 +23,15 @@ class SignerSerializer(serializers.ModelSerializer):
         middle_name = attrs.get('middle_name')
 
         if not all([first_name, last_name, middle_name]):
-            raise exceptions.ValidationError(f'Missing user data: First name: {first_name}, Last name: {last_name}, Middle name: {middle_name}')
+            error_msg = f'Missing user data: First name: {first_name}, Last name: {last_name}, Middle name: {middle_name}'
+            print('Error:', error_msg)
+            raise exceptions.ValidationError(error_msg)
 
         if models.Signer.objects.filter(first_name=first_name, last_name=last_name,
                                          middle_name=middle_name, vote_business__isnull=False,
                                          vote_business_veterans__isnull=False).exists():
+            error_msg = 'Vote already exists.'
+            print('Error:', error_msg)
             raise exceptions.ValidationError('Vote already exists.')
         
         return attrs

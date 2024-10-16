@@ -50,6 +50,7 @@ class SuccessView(APIView):
         serializer = serializers.SignerSerializer(data=result)
         serializer.is_valid(raise_exception=True)
         serializer.save()
+        print("Errors:", serializer.errors)
 
         cache.set(f'{request_id}_status', True)
         return Response({"success": True}, status=status.HTTP_200_OK)
