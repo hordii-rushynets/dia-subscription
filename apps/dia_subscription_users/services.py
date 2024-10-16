@@ -73,7 +73,7 @@ class DIASubscriptionService:
         
         response = requests.post(f'{settings.DIA_BASE_URL}/api/v2/acquirers/branch/{branch_id}/offer-request/dynamic', data=json.dumps({
             "offerId": f"{offer_id}",
-            "returnLink": "https://dia-subscription.test-internet-technology-hub.online/api/v1/success",
+            "returnLink": f"https://dia-subscription.test-internet-technology-hub.online/api/v1/validate-sign?requestId={request_id}",
             "requestId": request_id,
             "signAlgo": "DSTU",
             "scopes": {"diiaId": ["auth"]}

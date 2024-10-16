@@ -1,3 +1,4 @@
+from django.conf import settings
 from rest_framework import status
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -5,6 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.exceptions import ValidationError
 import base64
 import json
+from django.core.cache import cache
 
 from apps.dia_subscription_users import services, models
 from api.v1.subscription import serializers
@@ -49,8 +51,20 @@ class SuccessView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
+        cache.set(f'{request_id}_status', True)
         return Response({"success": True}, status=status.HTTP_200_OK)
 
+
+class ValidateSignStatusView(APIView):
+    def post(self, request: Request, *args, **kwargs) -> Response:
+        request_id = request.data.get('requestId')
+        request_id_status = cache.get(f'{request_id}_status')
+
+        if not request_id_status:
+            return Response({"detail": "Redirecting..."}, status=status.HTTP_302_FOUND, headers={'Location': f'{settings.FRONTEND_DOMAIN}/vote-alredy'})
+
+        return Response({"detail": "Redirecting..."}, status=status.HTTP_302_FOUND, headers={'Location': f'{settings.FRONTEND_DOMAIN}/success'})
+        
 
 class ValidateSign(APIView):
     def post(self, request: Request, *args, **kwargs) -> Response:
