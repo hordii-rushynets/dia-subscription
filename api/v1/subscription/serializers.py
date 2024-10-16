@@ -8,13 +8,13 @@ from apps.dia_subscription_users import models
 class CompanySerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Company
-        fields = ['id']
+        fields = ['id', 'business_type', 'name', 'image', 'description']
 
 
 class SignerSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Signer
-        fields = ['id', 'first_name', 'last_name', 'middle_name', 'vote']
+        fields = ['id', 'first_name', 'last_name', 'middle_name', 'vote_business', 'vote_business_veterans']
     
     def validate(self, attrs: OrderedDict) -> OrderedDict:
         first_name = attrs.get('first_name')
@@ -25,7 +25,8 @@ class SignerSerializer(serializers.ModelSerializer):
             raise exceptions.ValidationError(f'Missing user data: First name: {first_name}, Last name: {last_name}, Middle name: {middle_name}')
 
         if models.Signer.objects.filter(first_name=first_name, last_name=last_name,
-                                         middle_name=middle_name, vote__isnull=False).exists():
+                                         middle_name=middle_name, vote_business__isnull=False,
+                                         vote_business_veterans__isnull=False).exists():
             raise exceptions.ValidationError('Vote already exists.')
         
         return attrs
