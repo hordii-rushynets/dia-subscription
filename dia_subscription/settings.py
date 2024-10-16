@@ -143,6 +143,8 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
+MEDIA_URL = 'media/'
+
 DIA_BASE_URL = os.getenv('DIA_BASE_URL')
 DIA_AUTH_ACQUIRER_TOKEN=os.getenv('DIA_AUTH_ACQUIRER_TOKEN')
 DIA_ACQUIRER_TOKEN=os.getenv('DIA_ACQUIRER_TOKEN')
