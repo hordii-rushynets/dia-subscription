@@ -18,15 +18,14 @@ class CompanyView(APIView):
 
 class DeeplinkView(APIView):
     def post(self, request: Request, *args, **kwargs) -> Response:
-        company_id = request.data.get('id')
-        if not models.Company.objects.filter(id=company_id).exists():
-            raise ValidationError(f'Company with ID: {company_id} does not exists.')
+        vote_business_id = request.data.get('vote_business')
+        vote_business_veterans_id = request.data.get('vote_business_veterans')
 
         service = services.DIASubscriptionService()
         acquirer_token = service.get_acquirer_token()
         branch_id = service.create_branch(acquirer_token)
         branch_offer_id = service.create_branch_offer(acquirer_token, branch_id)
-        deeplink = service.make_offer_request(acquirer_token, branch_id, branch_offer_id, company_id)
+        deeplink = service.make_offer_request(acquirer_token, branch_id, branch_offer_id, vote_business_id, vote_business_veterans_id)
         return Response({"deeplink": deeplink}, status=status.HTTP_200_OK)
 
 

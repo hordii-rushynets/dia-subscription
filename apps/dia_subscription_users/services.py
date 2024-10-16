@@ -67,7 +67,7 @@ class DIASubscriptionService:
 
         return response.json().get('_id')
 
-    def make_offer_request(self, token: str, branch_id: str, offer_id: str, company_id: int) -> str:
+    def make_offer_request(self, token: str, branch_id: str, offer_id: str, vote_business_id: int, vote_business_veterans_id: int) -> str:
         request_uuid: uuid.UUID = uuid.uuid4()
         request_id: bytes = self.get_hash(request_uuid.bytes).decode('utf-8')
         
@@ -85,7 +85,8 @@ class DIASubscriptionService:
         if not response.status_code == 200:
             raise ValidationError('Failed to make offer request.')
         
-        cache.set(f'{request_id}_company_id', company_id, timeout=60*4)
+        cache.set(f'{request_id}_vote_business_id', vote_business_id, timeout=60*4)
+        cache.set(f'{request_id}_vote_business_veterans_id', vote_business_veterans_id, timeout=60*4)
         cache.set(request_id, request_uuid, timeout=60*4)
         return response.json().get('deeplink')
 
@@ -108,7 +109,8 @@ class DIASubscriptionService:
             'first_name': signer[0],
             'last_name': signer[1],
             'middle_name': signer[2],
-            'vote': int(cache.get(f'{request_id}_company_id'))
+            'vote_business': int(cache.get(f'{request_id}_vote_business_id')),
+            'vote_business_veterans': int(cache.get(f'{request_id}_vote_business_veterans_id')),
         }
 
     def get_hash(self, request_uuid: bytes) -> bytes:
