@@ -55,7 +55,7 @@ class DIASubscriptionService:
 
     def create_branch_offer(self, token: str, branch_id: str) -> str:
         response = requests.post(f'{settings.DIA_BASE_URL}api/v1/acquirers/branch/{branch_id}/offer', data=json.dumps({
-            "name": "Авторизація",
+            "name": "Авторизація для участі в голосуванні за фіналістів «Бізнес-трампліна 2.0»",
             "scopes": { 
                 "diiaId": ["auth"]
             }
