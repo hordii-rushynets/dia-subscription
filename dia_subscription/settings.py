@@ -156,3 +156,5 @@ CA_CERTIFICATES_FILE_NAME = 'CACertificates.Test.All.p7b' if DEBUG else 'CACerti
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 APPEND_SLASH = False
+
+FRONTEND_DOMAIN = os.getenv('FRONTEND_DOMAIN')

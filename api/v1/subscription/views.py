@@ -1,3 +1,4 @@
+from django.conf import settings
 from rest_framework import status
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -46,10 +47,11 @@ class SuccessView(APIView):
         result = service.get_user_data(signature, request_id)
 
         serializer = serializers.SignerSerializer(data=result)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
+        if not serializer.is_valid():
+            return Response({"detail": "Redirecting..."}, status=status.HTTP_302_FOUND, headers={'Location': f'{settings.FRONTEND_DOMAIN}vote-alredy'})
 
-        return Response({"success": True}, status=status.HTTP_200_OK)
+        serializer.save()
+        return Response({"detail": "Redirecting..."}, status=status.HTTP_302_FOUND, headers={'Location': f'{settings.FRONTEND_DOMAIN}success'})
 
 
 class ValidateSign(APIView):
