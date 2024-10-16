@@ -7,9 +7,15 @@ from apps.dia_subscription_users import models
 
 
 class CompanySerializer(serializers.ModelSerializer):
+    signer_count = serializers.SerializerMethodField()
+
     class Meta:
         model = models.Company
-        fields = ['id', 'business_type', 'name', 'image', 'description']
+        fields = ['id', 'business_type', 'name', 'image', 'description', 'signer_count']
+    
+    def get_signer_count(self, obj):
+        return models.Signer.objects.filter(vote_business=obj).count() + models.Signer.objects.filter(vote_business_veterans=obj).count()
+
 
 
 class SignerSerializer(serializers.ModelSerializer):
