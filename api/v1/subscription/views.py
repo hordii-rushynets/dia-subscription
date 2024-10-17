@@ -49,12 +49,9 @@ class SuccessView(APIView):
         print("result:", result)
 
         serializer = serializers.SignerSerializer(data=result)
-        if not serializer.is_valid():
-            print("Errors:", serializer.errors)
-            cache.set(f'{request_id}_status', False, timeout=60*4)
-            return Response({"success": True}, status=status.HTTP_200_OK)
-
+        serializer.is_valid(raise_exception=True)
         serializer.save()
+        print("Errors:", serializer.errors)
 
         cache.set(f'{request_id}_status', True, timeout=60*4)
         return Response({"success": True}, status=status.HTTP_200_OK)
@@ -65,10 +62,10 @@ class ValidateSignStatusView(APIView):
         request_id = request.query_params.get('requestId')
         request_id_status = cache.get(f'{request_id}_status')
 
-        print('request_id_status:', request_id_status, '\n')
+        print('ValidateSignStatusView request_id,', request_id, '\n')
 
         if not request_id_status:
-            return Response({"detail": "Redirecting..."}, status=status.HTTP_302_FOUND, headers={'Location': f'{settings.FRONTEND_DOMAIN}/success.html?vote=already=true'})
+            return Response({"detail": "Redirecting..."}, status=status.HTTP_302_FOUND, headers={'Location': f'{settings.FRONTEND_DOMAIN}/success.html'})
 
         return Response({"detail": "Redirecting..."}, status=status.HTTP_302_FOUND, headers={'Location': f'{settings.FRONTEND_DOMAIN}/success.html'})
         
