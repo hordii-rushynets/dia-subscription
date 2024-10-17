@@ -63,9 +63,9 @@ class ValidateSignStatusView(APIView):
         request_id_status = cache.get(f'{request_id}_status')
 
         if not request_id_status:
-            return Response({"detail": "Redirecting..."}, status=status.HTTP_302_FOUND, headers={'Location': f'{settings.FRONTEND_DOMAIN}/vote-alredy'})
+            return Response({"detail": "Redirecting..."}, status=status.HTTP_302_FOUND, headers={'Location': f'{settings.FRONTEND_DOMAIN}/vote-already.html'})
 
-        return Response({"detail": "Redirecting..."}, status=status.HTTP_302_FOUND, headers={'Location': f'{settings.FRONTEND_DOMAIN}/success'})
+        return Response({"detail": "Redirecting..."}, status=status.HTTP_302_FOUND, headers={'Location': f'{settings.FRONTEND_DOMAIN}/success.html'})
         
 
 class ValidateSign(APIView):
